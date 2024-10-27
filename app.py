@@ -1,46 +1,31 @@
-from flask import Flask
-
-from flask import render_template
-
-from flask import request
-
-from flask import redirect
-
+from flask import Flask, render_template, request, redirect
 import csv
+import os
+
 app = Flask(__name__)
 
 @app.route('/submit_form', methods=['POST', 'GET'])
 def login():
-    if request.method == 'POST': #if we have post method
+    if request.method == 'POST':
         data = request.form.to_dict()
         write_to_csv(data)
-        return redirect('thankyou.html')
+        return redirect('/thankyou.html')
     else:
-        return 'Something is wrong'
-
-#data = {'email': 'pratik@gmail.com', 'subject': 'Pratik', 'message': 'Hi'}
+        return 'Something went wrong. Please try again.'
 
 def write_to_file(data):
     with open('database.txt', mode='a') as database:
         email = data['email']
         subject = data['subject']
         message = data['message']
-        file = database.write(f'\n {email},{subject},{message}')
-
+        database.write(f'\n{email},{subject},{message}')
 
 def write_to_csv(data):
-    with open('database2.csv', newline='', mode='a') as database2:  # opening our database.csv file in append mode (why append mode?)
-
-        email = data['email']  # fetching data from our data dictionary created in html form
-
-        subject = data['subject']  # fetching subject from our data dictionary created in html form
-
-        message = data['message']  # fetching message from our data dictionary created in html form
-
-        # csv.writer takes some parameters- 1-file in which to write, 2 - delimiter-Line/Column breaker, 3-quotechar, 4-quoting
-
+    with open('database2.csv', mode='a', newline='') as database2:
+        email = data['email']
+        subject = data['subject']
+        message = data['message']
         csv_writer = csv.writer(database2, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
-
         csv_writer.writerow([email, subject, message])
 
 @app.route('/')
@@ -55,11 +40,10 @@ def components():
 def contact():
     return render_template('contact.html')
 
-
-#use this rule
-@app.route('/<string:page_name>')  #index.html  about.html
+@app.route('/<string:page_name>')
 def html_page(page_name):
-    return render_template(page_name)  #index.html  about.html
+    return render_template(page_name)
 
-if __name__=='__main__':
-    app.run(debug=True,port=8000)
+if __name__ == '__main__':
+    port = int(os.environ.get('PORT', 10000))
+    app.run(host='0.0.0.0', port=port)
