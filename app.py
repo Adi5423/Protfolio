@@ -60,3 +60,6 @@ def contact():
 @app.route('/<string:page_name>')  #index.html  about.html
 def html_page(page_name):
     return render_template(page_name)  #index.html  about.html
+
+if __name__=='__main__':
+    app.run(debug=True,port=8000)
