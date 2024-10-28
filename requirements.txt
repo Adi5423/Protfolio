@@ -1,59 +1,41 @@
-annotated-types
-anyio
-attrs
-beautifulsoup4
-blinker
-certifi
-cffi
-charset-normalizer              
-click               
-colorama            
-comtypes            
-distro              
-Flask               
-groq                
-h11                 
-httpcore            
-httpx               
-idna                
-itsdangerous        
-Jinja2              
-logging             
-MarkupSafe         
-MouseInfo          
-outcome            
-pillow             
-psutil             
-PyAutoGUI          
-pycaw
-pycparser              
-pydantic               
-pydantic_core          
-PyGetWindow            
-PyMsgBox               
-pyperclip              
-pypiwin32              
-PyRect             
-PyScreeze          
-PySocks            
-python-dotenv      
-pyttsx3            
-pytweening         
-pywhatkit          
-pywin32            
-requests           
-screen_brightness_control
-selenium
-sniffio 
-sortedcontainers
-soupsieve       
-SpeechRecognition
-trio
-trio-websocket
-typing_extensions
-urllib3
-websocket-client
-Werkzeug
-wikipedia
-WMI
-wsproto
+# Web framework
+Flask==2.0.1
+gunicorn==20.1.0
+Werkzeug==2.0.1
+
+# Speech and Audio
+SpeechRecognition==3.8.1
+pyttsx3==2.90
+
+# API and Web
+requests==2.31.0
+groq==0.3.0
+wikipedia==1.4.0
+
+# System Control
+psutil==5.9.5
+screen-brightness-control==0.14.1
+
+# Date and Time
+python-dateutil==2.8.2
+
+# Utils
+pyautogui==0.9.54
+numpy==1.24.3
+
+# JSON Processing
+json5==0.9.14
+
+# CSV Processing
+python-csv==0.0.13
+
+# Logging
+logging==0.4.9.6
+
+# Remove Windows-specific packages:
+# pywhatkit
+# pycaw
+# comtypes
+
+# Additional dependencies
+python-dotenv==1.0.0
