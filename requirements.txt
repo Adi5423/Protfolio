@@ -18,6 +18,7 @@ wikipedia
 
 # System Control
 psutil
+comtypes
 
 # Date and Time
 python-dateutil
