@@ -15,9 +15,10 @@ sys.path.append(os.path.join(os.path.dirname(__file__), 'projects'))
 
 app = Flask(__name__)
 
-# Enable Flask debug mode
-app.debug = True
+# Remove debug mode for production
+app.debug = False
 
+# Your existing route handlers...
 @app.route('/submit_form', methods=['POST', 'GET'])
 def login():
     if request.method == 'POST':
@@ -80,9 +81,8 @@ def html_page(page_name):
     logger.info(f"Serving page: {page_name}")
     return render_template(page_name)
 
+# Modified main block for production
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 10000))
-    logger.info(f"Starting Flask server on port {port}")
-    print(f"Server is running on http://localhost:{port}")
-    print("Press CTRL+C to quit")
-    app.run(host='0.0.0.0', port=port, debug=True)
+    # Get port from environment variable (Render will set this)
+    port = int(os.environ.get('PORT', 8000))
+    app.run(host='0.0.0.0', port=port)
