@@ -10,7 +10,7 @@ import time
 import os
 import sys
 import speech_recognition as sr
-import pyautogui
+# import pyautogui
 import wikipedia
 import io
 import pywhatkit
@@ -26,7 +26,7 @@ import requests
 import pyttsx3 as ptx3
 from groq import Groq
 import subprocess
-import pyautogui
+# import pyautogui
 import random
 
 # 3. Constants and configurations
@@ -198,47 +198,47 @@ def get_weather(city_name, api_key):
         print("Error:", response.status_code)
         return None  # Return None if there's an error
 
-def continuous_scroll(amount):
-    global scrolling
-    while scrolling:  # Run while scrolling is True
-        pyautogui.scroll(amount)
-        time.sleep(0.5)  # Adjust the sleep duration as needed
+# def continuous_scroll(amount):
+#     global scrolling
+#     while scrolling:  # Run while scrolling is True
+#         pyautogui.scroll(amount)
+#         time.sleep(0.5)  # Adjust the sleep duration as needed
 
-def listen_for_stop_command(is_text_mode):
-    global scrolling
-    while True:
-        command = takeCommand(is_text_mode)
-        if "stop" in command:
-            print("Stopping scrolling.")
-            scrolling = False  # Set scrolling to False to stop scrolling
-            speakPTX("Sure", is_text_mode)
-            return  # Exit the loop to stop scrolling
+# def listen_for_stop_command(is_text_mode):
+#     global scrolling
+#     while True:
+#         command = takeCommand(is_text_mode)
+#         if "stop" in command:
+#             print("Stopping scrolling.")
+#             scrolling = False  # Set scrolling to False to stop scrolling
+#             speakPTX("Sure", is_text_mode)
+#             return  # Exit the loop to stop scrolling
 
-def handle_scroll_command(is_text_mode):
-    global scrolling
-    speakPTX("Would you like to scroll upward or downward?", is_text_mode)
-    direction = takeCommand(is_text_mode)
+# def handle_scroll_command(is_text_mode):
+#     global scrolling
+#     speakPTX("Would you like to scroll upward or downward?", is_text_mode)
+#     direction = takeCommand(is_text_mode)
     
-    if "upward" in direction:
-        amount = 100  # Positive value for up
-    elif "downward" in direction:
-        amount = -100  # Negative value for down
-    else:
-        speakPTX("I didn't understand that. Please say or type 'upward' or 'downward'.", is_text_mode)
-        return
+#     if "upward" in direction:
+#         amount = 100  # Positive value for up
+#     elif "downward" in direction:
+#         amount = -100  # Negative value for down
+#     else:
+#         speakPTX("I didn't understand that. Please say or type 'upward' or 'downward'.", is_text_mode)
+#         return
 
-    speakPTX(f"You have 3 seconds to open the app. {'Type' if is_text_mode else 'Say'} stop to stop. Starting in...", is_text_mode)
-    for i in range(3, 0, -1):
-        speakPTX(str(i), is_text_mode)  # Countdown
-        time.sleep(1)
+#     speakPTX(f"You have 3 seconds to open the app. {'Type' if is_text_mode else 'Say'} stop to stop. Starting in...", is_text_mode)
+#     for i in range(3, 0, -1):
+#         speakPTX(str(i), is_text_mode)  # Countdown
+#         time.sleep(1)
 
-    scrolling = True  # Start scrolling
-    listener_thread = threading.Thread(target=listen_for_stop_command, args=(is_text_mode,))
-    listener_thread.start()
+#     scrolling = True  # Start scrolling
+#     listener_thread = threading.Thread(target=listen_for_stop_command, args=(is_text_mode,))
+#     listener_thread.start()
     
-    # Start continuous scrolling
-    continuous_scroll(amount)
-    listener_thread.join()  # Wait for the listener thread to finish
+#     # Start continuous scrolling
+#     continuous_scroll(amount)
+#     listener_thread.join()  # Wait for the listener thread to finish
     
 '''
 def speakTTS(text):
@@ -259,7 +259,7 @@ def takeCommand(is_text_mode):
         if "quit" in query or "exit" in query or ("good" in query and "bye" in query):
             print("Exiting...")
             print("Nice with you buddy, Stay Connected.")
-            sys.exit()
+            # sys.exit()
         return query
     else:
         # Original voice recognition code
@@ -274,7 +274,7 @@ def takeCommand(is_text_mode):
             if "quit" in query or "exit" in query or ("good" in query and "bye" in query):
                 print("Exiting...")
                 speakPTX("Nice with you buddy, Stay Connected.")
-                sys.exit()
+                # sys.exit()
             return query.lower()
         except Exception as e:
             print("Say that again please...")
@@ -487,33 +487,33 @@ def process_single_message(message, is_text_mode=True):
                     except wikipedia.exceptions.PageError:
                         return (f"I couldn't find any information about {person}")
 
-                # searching for files
-                elif "find" in message:
-                    message = message.replace("find", "")
-                    namesearch=speakPTXinput("Sure . say only the file name please")
-                    searchmessage = speakPTXinput("Sure  , for text file say keyword the text , and image as png jpg or it's extension name only , same for videos. ")
-                    if "the" in searchmessage and "text" in searchmessage:
-                        # return ("Searching for text files...")
-                        global typeExten
-                        typeExten=f"{namesearch}.txt"
-                    # Press the Windows key
-                    pyautogui.press('win')
-                    # Give the Start menu a moment to open
-                    time.sleep(1.5)
-                    # Type the search message
-                    pyautogui.typewrite(f'Documents: {typeExten}', interval=0.1)
-                    time.sleep(1.5+.5)
-                    Newmessage=speakPTXinput("Sure  i founnd these results. i can open the first one, or tell the number count to open, if many files")
-                    checkResponse=GenerateGroq(f" \" {Newmessage} \" just return the number this message if no number is there return false , if numbers are there just return the numbers in integer only. No extra data should be included in the response either False or any number if there.")
-                    if checkResponse is not False:
-                        for i in range(15):
-                            if str(i) == str(checkResponse):
-                                for _ in range(int(i)):
-                                    pyautogui.press('down')
-                                    time.sleep(.9)  
-                        pyautogui.press('enter')  
-                    else:
-                        return ("Okay Sure ")
+                # # searching for files
+                # elif "find" in message:
+                #     message = message.replace("find", "")
+                #     namesearch=speakPTXinput("Sure . say only the file name please")
+                #     searchmessage = speakPTXinput("Sure  , for text file say keyword the text , and image as png jpg or it's extension name only , same for videos. ")
+                #     if "the" in searchmessage and "text" in searchmessage:
+                #         # return ("Searching for text files...")
+                #         global typeExten
+                #         typeExten=f"{namesearch}.txt"
+                #     # Press the Windows key
+                #     pyautogui.press('win')
+                #     # Give the Start menu a moment to open
+                #     time.sleep(1.5)
+                #     # Type the search message
+                #     pyautogui.typewrite(f'Documents: {typeExten}', interval=0.1)
+                #     time.sleep(1.5+.5)
+                #     Newmessage=speakPTXinput("Sure  i founnd these results. i can open the first one, or tell the number count to open, if many files")
+                #     checkResponse=GenerateGroq(f" \" {Newmessage} \" just return the number this message if no number is there return false , if numbers are there just return the numbers in integer only. No extra data should be included in the response either False or any number if there.")
+                #     if checkResponse is not False:
+                #         for i in range(15):
+                #             if str(i) == str(checkResponse):
+                #                 for _ in range(int(i)):
+                #                     pyautogui.press('down')
+                #                     time.sleep(.9)  
+                #         pyautogui.press('enter')  
+                #     else:
+                #         return ("Okay Sure ")
                     
                 elif "open youtube" in message:
                     webbrowser.open_new("https://youtube.com")
@@ -695,33 +695,33 @@ def main(is_text_mode):
                     except wikipedia.exceptions.PageError:
                         speakPTX(f"I couldn't find any information about {person}",is_text_mode)
 
-                # searching for files
-                elif "find" in query:
-                    query = query.replace("find", "")
-                    namesearch=speakPTXinput("Sure . say only the file name please",is_text_mode)
-                    searchquery = speakPTXinput("Sure  , for text file say keyword the text , and image as png jpg or it's extension name only , same for videos. ",is_text_mode)
-                    if "the" in searchquery and "text" in searchquery:
-                        speakPTX("Searching for text files...",is_text_mode)
-                        global typeExten
-                        typeExten=f"{namesearch}.txt"
-                    # Press the Windows key
-                    pyautogui.press('win')
-                    # Give the Start menu a moment to open
-                    time.sleep(1.5)
-                    # Type the search query
-                    pyautogui.typewrite(f'Documents: {typeExten}', interval=0.1)
-                    time.sleep(1.5+.5)
-                    NewQuery=speakPTXinput("Sure  i founnd these results. i can open the first one, or tell the number count to open, if many files",is_text_mode)
-                    checkResponse=GenerateGroq(f" \" {NewQuery} \" just return the number this query if no number is there return false , if numbers are there just return the numbers in integer only. No extra data should be included in the response either False or any number if there.")
-                    if checkResponse is not False:
-                        for i in range(15):
-                            if str(i) == str(checkResponse):
-                                for _ in range(int(i)):
-                                    pyautogui.press('down')
-                                    time.sleep(.9)  
-                        pyautogui.press('enter')  
-                    else:
-                        speakPTX("Okay Sure ")
+                # # searching for files
+                # elif "find" in query:
+                #     query = query.replace("find", "")
+                #     namesearch=speakPTXinput("Sure . say only the file name please",is_text_mode)
+                #     searchquery = speakPTXinput("Sure  , for text file say keyword the text , and image as png jpg or it's extension name only , same for videos. ",is_text_mode)
+                #     if "the" in searchquery and "text" in searchquery:
+                #         speakPTX("Searching for text files...",is_text_mode)
+                #         global typeExten
+                #         typeExten=f"{namesearch}.txt"
+                #     # Press the Windows key
+                #     pyautogui.press('win')
+                #     # Give the Start menu a moment to open
+                #     time.sleep(1.5)
+                #     # Type the search query
+                #     pyautogui.typewrite(f'Documents: {typeExten}', interval=0.1)
+                #     time.sleep(1.5+.5)
+                #     NewQuery=speakPTXinput("Sure  i founnd these results. i can open the first one, or tell the number count to open, if many files",is_text_mode)
+                #     checkResponse=GenerateGroq(f" \" {NewQuery} \" just return the number this query if no number is there return false , if numbers are there just return the numbers in integer only. No extra data should be included in the response either False or any number if there.")
+                #     if checkResponse is not False:
+                #         for i in range(15):
+                #             if str(i) == str(checkResponse):
+                #                 for _ in range(int(i)):
+                #                     pyautogui.press('down')
+                #                     time.sleep(.9)  
+                #         pyautogui.press('enter')  
+                #     else:
+                #         speakPTX("Okay Sure ")
                     
                 elif "open youtube" in query:
                     webbrowser.open_new("https://youtube.com")
@@ -827,7 +827,7 @@ def main(is_text_mode):
                 elif "quit" in query or "exit" in query or "goodbye" in query:
                     print("Exiting...")
                     speakPTX("NIce with you buddy,Stay Connected.",is_text_mode)
-                    sys.exit()
+                    # sys.exit()
 
                 elif "switch to text input" in query:
                     use_voice_input = False

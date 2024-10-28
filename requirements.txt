@@ -3,8 +3,11 @@ Flask
 gunicorn
 Werkzeug
 
-# Speech and Audio
+# Speech 
 SpeechRecognition
+
+#GUI Dependencies (required for local development)
+screen-brightness-control
 pyttsx3
 
 # API and Web
@@ -14,7 +17,6 @@ wikipedia
 
 # System Control
 psutil
-screen-brightness-control
 
 # Date and Time
 python-dateutil
