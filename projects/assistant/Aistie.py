@@ -13,7 +13,7 @@ import speech_recognition as sr
 # import pyautogui
 import wikipedia
 import io
-import pywhatkit
+# import pywhatkit
 import psutil
 from ctypes import cast, POINTER
 from comtypes import CLSCTX_ALL
@@ -752,7 +752,7 @@ def main(is_text_mode):
                 elif "play" in query:
                     song = query.replace("play", "").strip()
                     speakPTX(f"Playing {song} on YouTube",is_text_mode)
-                    pywhatkit.playonyt(song)
+                    # pywhatkit.playonyt(song)
 
                 elif ("create" in query or "make" in query or "generate" in query) and "folder" in query:
                     CreationFolder(query,is_text_mode)
