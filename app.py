@@ -1,8 +1,22 @@
-from flask import Flask, render_template, request, redirect
-import csv
+from flask import Flask, render_template, request, redirect, jsonify
+import sys
 import os
+import csv
+# Use process_single_message instead of GenerateGroq
+from projects.assistant.Aistie import process_single_message
+import logging
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+# Add the projects directory to Python path
+sys.path.append(os.path.join(os.path.dirname(__file__), 'projects'))
 
 app = Flask(__name__)
+
+# Enable Flask debug mode
+app.debug = True
 
 @app.route('/submit_form', methods=['POST', 'GET'])
 def login():
@@ -30,20 +44,45 @@ def write_to_csv(data):
 
 @app.route('/')
 def index():
+    logger.info("Serving index page")
     return render_template('index.html')
 
-@app.route('/components')
-def components():
-    return render_template('components.html')
+@app.route('/process_message', methods=['POST'])
+def process_message():
+    message = request.json.get('message')
+    logger.info(f"Received message: {message}")
+    try:
+        response = process_single_message(message)
+        logger.info(f"Generated response: {response}")
+        return jsonify({'response': response})
+    except Exception as e:
+        logger.error(f"Error processing message: {str(e)}")
+        return jsonify({'response': f"An error occurred: {str(e)}"})
+
+@app.route('/initial_greeting')
+def initial_greeting():
+    greeting = "Hello! I'm Aistie, your personal AI assistant. How can I help you today?"
+    logger.info("Sending initial greeting")
+    return jsonify({'greeting': greeting})
+
+@app.route('/assistant')
+def assistant_page():
+    logger.info("Serving assistant page")
+    return render_template('assistant.html')
 
 @app.route('/contact')
 def contact():
+    logger.info("Serving contact page")
     return render_template('contact.html')
 
 @app.route('/<string:page_name>')
 def html_page(page_name):
+    logger.info(f"Serving page: {page_name}")
     return render_template(page_name)
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 10000))
-    app.run(host='0.0.0.0', port=port)
+    logger.info(f"Starting Flask server on port {port}")
+    print(f"Server is running on http://localhost:{port}")
+    print("Press CTRL+C to quit")
+    app.run(host='0.0.0.0', port=port, debug=True)

@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aistie - AI Assistant</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        /* FAQ Button Styles */
+        .faq-button {
+            position: relative;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            background-color: #ffe53b;
+            background-image: linear-gradient(147deg, #ffe53b 0%, #ff2525 74%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.151);
+            margin-left: 10px;
+        }
+
+        .faq-button svg {
+            height: 1.5em;
+            fill: white;
+            position: relative;
+            margin-left: 10px;
+        }
+
+        .tooltip {
+            position: absolute;
+            bottom: -200px; /* Increased to show more content */
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #333;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            white-space: pre-line; /* Allow line breaks */
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            width: 300px; /* Set fixed width */
+            text-align: left;
+        }
+
+        /* Add this new class */
+        .tooltip.show {
+            opacity: 1;
+        }
+
+        .commands-container {
+            position: absolute; /* Change from fixed to absolute */
+            top: 100%; /* Position it right below the FAQ button */
+            right: 0;
+            width: 300px;
+            background-color: #ffefd5;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: none;
+            z-index: 999;
+            max-height: 400px; /* Limit the height */
+            overflow-y: auto;
+            margin-top: 10px; /* Add some space between button and container */
+        }
+
+        /* Animation for the FAQ button */
+        .faq-button:hover svg {
+            animation: jello-vertical 0.7s both;
+
+        }
+
+        @keyframes jello-vertical {
+            0% { transform: scale3d(1, 1, 1); }
+            30% { transform: scale3d(0.75, 1.25, 1); }
+            40% { transform: scale3d(1.25, 0.75, 1); }
+            50% { transform: scale3d(0.85, 1.15, 1); }
+            65% { transform: scale3d(1.05, 0.95, 1); }
+            75% { transform: scale3d(0.95, 1.05, 1); }
+            100% { transform: scale3d(1, 1, 1); }
+        }
+        /* Ensure the body takes the full height of the viewport */
+        body {
+            min-height: 100vh;
+        }
+
+        /* Input styling */
+        .input {
+            width: 230px;
+            transition: width 0.3s;
+            padding: 10px;
+            border: none;
+            outline: none;
+            border-radius: 5px;
+            box-shadow: 0 1px gray;
+            font-size: 18px;
+            font-family: Consolas, monaco, monospace;
+        }
+
+        .input:focus {
+            outline: none;
+            box-shadow: 0 0 15px rgba(52, 152, 219, 0.5);
+        }
+
+        .input::placeholder {
+            color: blue;
+        }
+
+        .received-message {
+            background-color: #09c391;
+        }
+
+        /* Hover Effect */
+        .input:hover {
+            background-color: #f0f8ff;
+        }
+
+        /* Center the input container */
+        .input-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            gap: 10px; /* Added space between input and button */
+        }
+        /* Add this to your existing styles */
+        .faq-button:hover .tooltip {
+            opacity: 1;
+        }
+
+        /* Animation for messages */
+        .chat-message {
+            animation: slideIn 0.3s ease-out;
+            margin-bottom: 8px;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <!-- Navigation -->
+    <nav class="navbar navbar-fixed-top navbar-default">
+        <div class="container">
+            <div class="collapse navbar-collapse" id="navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="./index.html" title="">01 : Home</a></li>
+                    <li><a href="./works.html" title="">02 : Projects</a></li>
+                    <li><a href="./about.html" title="">03 : About me</a></li>
+                    <li><a href="./contact.html" title="">04 : Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Chat Container -->
+    <div class="max-w-2xl h-screen mx-auto bg-gray-200 dark:bg-zinc-800 shadow-md rounded-lg overflow-hidden">
+        <div class="flex flex-col h-full">
+            <!-- Header -->
+            <div class="px-4 py-3 border-b dark:border-zinc-700">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-lg font-semibold text-zinc-800 dark:text-white">
+                        Aistie AI Assistant
+                    </h2>
+                    <div class="flex items-center">
+                        <div class="bg-green-500 text-white text-xs px-2 py-1 rounded-full mr-2">
+                            Online
+                        </div>
+                        <!-- Just modify the FAQ button part -->
+                        <button class="faq-button" id="faqButton">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
+                                <path d="M80 160c0-35.3 28.7-64 64-64h32c35.3 0 64 28.7 64 64v3.6c0 21.8-11.1 42.1-29.4 53.8l-42.2 27.1c-25.2 16.2-40.4 44.1-40.4 74V320c0 17.7 14.3 32 32 32s32-14.3 32-32v-1.4c0-8.2 4.2-15.8 11-20.2l42.2-27.1c36.6-23.6 58.8-64.1 58.8-107.7V160c0-70.7-57.3-128-128-128H144C73.3 32 16 89.3 16 160c0 17.7 14.3 32 32 32s32-14.3 32-32zm80 320a40 40 0 1 0 0-80 40 40 0 1 0 0 80z"></path>
+                            </svg>
+                            <span class="tooltip">
+                                Use this keywords
+                                turn on turbo: Activates Turbo mode
+                                wikipedia: Searches Wikipedia
+                                time now: Current time
+                                date now: Current date
+                                who is: Person info
+                                find: Search files
+                                open youtube: YouTube
+                                open google: Google
+                                search: Google search
+                                play: YouTube play
+                                weather: Weather info
+                                set reminder: New reminder
+                                check reminders: List reminders
+                                volume: Adjust volume
+                                brightness: Screen brightness
+                                cpu usage: CPU %
+                                battery: Battery status
+                                quit/exit: Exit app
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chat Display -->
+            <div class="flex-1 p-3 overflow-y-auto flex flex-col-reverse space-y-reverse" id="chatDisplay">
+                <!-- Messages will be added dynamically -->
+            </div>
+
+            <!-- Input Area -->
+            <div class="px-3 py-2 border-t dark:border-zinc-700">
+                <div class="input-container">
+                    <input 
+                        placeholder="Type your Message..."
+                        class="input"
+                        name="text" 
+                        type="text" 
+                        id="chatInput" 
+                    />
+                    <button
+                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1.5 px-3 rounded-lg transition duration-300 ease-in-out text-sm ml-2"
+                        id="sendButton">
+                        Send
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const chatInput = document.getElementById('chatInput');
+        const sendButton = document.getElementById('sendButton');
+        const chatDisplay = document.getElementById('chatDisplay');
+        const faqButton = document.getElementById('faqButton');
+        // const commandsContainer = document.getElementById('commandsContainer');
+        // const commandsList = document.getElementById('commandsList');
+        const input = document.getElementById('chatInput');
+        const inputContainer = document.querySelector('.input-container');
+        let isVisible = false;
+        const tooltip = document.querySelector('.tooltip');
+
+        function addMessage(message, isUser ) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `chat-message ${isUser  ? 'self-end bg-blue-500 text-white' : 'self-start received-message text-black'} max-w-xs rounded-lg px-3 py-1.5 text-sm`;
+            messageDiv.textContent = message;
+            chatDisplay.insertBefore(messageDiv, chatDisplay.firstChild);
+        }
+
+        async function sendMessage() {
+            const message = chatInput.value.trim();
+            if (!message) return;
+
+            addMessage(message, true);
+            chatInput.value = '';
+
+            try {
+                const response = await fetch('/process_message', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ message: message })
+                });
+
+                const data = await response.json();
+                addMessage(data.response, false);
+            } catch (error) {
+                console.error('Error:', error);
+                addMessage('Sorry, there was an error processing your request.', false);
+            }
+        }
+
+        sendButton.addEventListener('click', sendMessage);
+        chatInput.addEventListener('keypress', (e ) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        // Initial greeting
+        window.addEventListener('load', async () => {
+            try {
+                const response = await fetch('/initial_greeting');
+                const data = await response.json();
+                addMessage(data.greeting, false);
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        });
+
+        faqButton.addEventListener('click', (e) => {
+            e.stopPropagation();
+            isVisible = !isVisible;
+            tooltip.style.opacity = isVisible ? '1' : '0';
+        });
+        // // List of commands
+        // const commands = [
+        //     "turn on turbo: Activates Turbo mode for AI enhanced responses",
+        //     "wikipedia: Searches Wikipedia for the given query",
+        //     "time now: Provides the current time",
+        //     "date now: Provides the current date",
+        //     "who is: Searches for information about a person",
+        //     "find: Searches for a specified file",
+        //     "open youtube: Opens YouTube website",
+        //     "open google: Opens Google website",
+        //     "search: Performs a Google search",
+        //     "play: Plays a song on YouTube",
+        //     "weather: Provides current weather information",
+        //     "set reminder: Sets a new reminder",
+        //     "check reminders: Lists all reminders",
+        //     "increase/decrease volume: Adjusts system volume",
+        //     "increase/decrease brightness: Adjusts screen brightness",
+        //     "cpu usage: Shows CPU usage percentage",
+        //     "battery status: Shows battery status",
+        //     "quit/exit/goodbye: Exits the application"
+        // ];
+
+        // Populate commands list
+        commands.forEach(command => {
+            const commandDiv = document.createElement('div');
+            // commandDiv.className = 'command-item';
+            commandDiv.textContent = command;
+            // commandsList.appendChild(commandDiv);
+        });
+        // Function to set input width to 100% on focus and backto placeholder size on blur
+        function adjustInputWidthOnFocus() {
+            input.style.width = '100%'; // Expand to maximum width on focus
+        }
+
+        function resetInputWidth() {
+            input.style.width = ''; // Reset to default width (placeholder fit)
+        }
+        faqButton.addEventListener('click', () => {
+            isVisible = !isVisible;
+            if (isVisible) {
+                tooltip.classList.add('show');
+            } else {
+                tooltip.classList.remove('show');
+            }
+});
+
+        // Close tooltip when clicking outside
+        document.addEventListener('click', (event) => {
+            if (!faqButton.contains(event.target)) {
+                isVisible = false;
+                tooltip.classList.remove('show');
+            }
+        });
+        document.addEventListener('click', () => {
+            isVisible = false;
+            tooltip.style.opacity = '0';
+        });
+        // Adjust width on focus
+        input.addEventListener('focus', adjustInputWidthOnFocus);
+
+        // Reset width on blur (when the input loses focus)
+        input.addEventListener('blur', resetInputWidth);
+    </script>
+</body>
+</html>
