@@ -9,6 +9,7 @@ SpeechRecognition
 #GUI Dependencies (required for local development)
 screen-brightness-control
 pyttsx3
+pywhatkit
 
 # API and Web
 requests
