@@ -28,6 +28,7 @@ from groq import Groq
 import subprocess
 # import pyautogui
 import random
+from urllib.parse import quote
 
 # 3. Constants and configurations
 GROQ_API = "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"
@@ -543,7 +544,9 @@ def process_single_message(message, is_text_mode=True):
 
                 elif "play" in message:
                     song = message.replace("play", "").strip()
-                    pywhatkit.playonyt(song)
+                    # 
+                    # pywhatkit.playonyt(song)
+                    return f"https://www.youtube.com/results?search_query={quote(song)}"
                     return (f"Playing {song} on YouTube")
 
                 elif ("create" in message or "make" in message or "generate" in message) and "folder" in message:
