@@ -1,41 +1,37 @@
 # Web framework
-Flask==2.0.1
-gunicorn==20.1.0
-Werkzeug==2.0.1
+Flask
+gunicorn
+Werkzeug
 
 # Speech and Audio
-SpeechRecognition==3.8.1
-pyttsx3==2.90
+SpeechRecognition
+pyttsx3
 
 # API and Web
-requests==2.31.0
-groq==0.3.0
-wikipedia==1.4.0
+requests
+groq
+wikipedia
 
 # System Control
-psutil==5.9.5
-screen-brightness-control==0.14.1
+psutil
+screen-brightness-control
 
 # Date and Time
-python-dateutil==2.8.2
+python-dateutil
 
 # Utils
-pyautogui==0.9.54
-numpy==1.24.3
+pyautogui
+numpy
 
 # JSON Processing
-json5==0.9.14
+json5
 
 # CSV Processing
-python-csv==0.0.13
+# Removing python-csv and using pandas instead
+pandas
 
 # Logging
-logging==0.4.9.6
-
-# Remove Windows-specific packages:
-# pywhatkit
-# pycaw
-# comtypes
+logging
 
 # Additional dependencies
-python-dotenv==1.0.0
+python-dotenv
